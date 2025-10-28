@@ -307,7 +307,13 @@ export default function DataTableDemo() {
   const handleLogOut = () => {
     signOut.mutate(undefined, {
       onSuccess: () => {
-        window.location.href = "/auth/login";
+        // Force a full page reload to clear all state
+        window.location.replace("/auth/login");
+      },
+      onError: (error) => {
+        console.error("Logout failed:", error);
+        // Even if logout fails, redirect to login
+        window.location.replace("/auth/login");
       },
     });
   };

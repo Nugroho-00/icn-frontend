@@ -16,8 +16,17 @@ export const authService = {
   /**
    * Sign out current user
    */
-  signOut: async () =>
-    await me.post(API_PATH.ME.AUTH.SIGN_OUT, {}).then((r) => r.data),
+  signOut: async () => {
+    try {
+      const response = await me.post(API_PATH.ME.AUTH.SIGN_OUT, {});
+      return response.data;
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Even if API call fails, we should treat it as successful
+      // because the client-side cleanup is more important
+      return { success: true };
+    }
+  },
 
   /**
    * Register new user

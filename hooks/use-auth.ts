@@ -13,7 +13,20 @@ export function useSignOut() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: authService.signOut,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["auth"] }),
+    onSuccess: () => {
+      // Clear all queries from cache
+      queryClient.clear();
+      // Remove all cached data
+      queryClient.removeQueries();
+      // Specifically clear auth-related queries
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    onError: (error) => {
+      console.error("Sign out error:", error);
+      // Even if API fails, clear local cache
+      queryClient.clear();
+    },
   });
 }
 

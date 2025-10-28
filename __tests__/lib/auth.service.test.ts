@@ -9,8 +9,15 @@ jest.mock("@/lib/axios/me");
 const mockedMe = me as jest.Mocked<typeof me>;
 
 describe("Auth Service", () => {
+  // Mock console.error to suppress error logs in tests
+  const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   describe("signIn", () => {
@@ -67,11 +74,15 @@ describe("Auth Service", () => {
       expect(result).toEqual(mockResponse.data);
     });
 
-    it("should handle sign out errors", async () => {
+    it("should handle sign out errors gracefully", async () => {
       const mockError = new Error("Sign out failed");
       mockedMe.post.mockRejectedValue(mockError);
 
-      await expect(authService.signOut()).rejects.toThrow("Sign out failed");
+      // Should not throw, instead returns success
+      const result = await authService.signOut();
+
+      expect(mockedMe.post).toHaveBeenCalledWith(API_PATH.ME.AUTH.SIGN_OUT, {});
+      expect(result).toEqual({ success: true });
     });
   });
 

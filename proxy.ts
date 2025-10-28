@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   try {
     const token = request.cookies.get("access_token")?.value;
     const { pathname } = request.nextUrl;
@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
     // Routes yang bisa diakses tanpa login
     const publicRoutes = ["/auth/login", "/auth/register", "/api/auth"];
 
-    // Routes yang harus diabaikan middleware
+    // Routes yang harus diabaikan proxy
     const ignoredRoutes = [
       "/_next",
       "/favicon.ico",
@@ -17,13 +17,20 @@ export function middleware(request: NextRequest) {
       "/.well-known",
     ];
 
-    // Skip middleware untuk ignored routes
+    // Skip proxy untuk ignored routes
     if (ignoredRoutes.some((route) => pathname.startsWith(route))) {
       return NextResponse.next();
     }
 
     const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
     const isRoot = pathname === "/";
+
+    // Special handling for sign-out - clear cookie and redirect
+    if (pathname === "/api/auth/sign-out") {
+      const response = NextResponse.next();
+      response.cookies.delete("access_token");
+      return response;
+    }
 
     // Kalau belum login dan bukan public route
     if (!token && !isPublic && !isRoot) {
@@ -47,7 +54,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   } catch (error) {
     // Log error tapi tetap lanjutkan request
-    console.error("Middleware error:", error);
+    console.error("Proxy error:", error);
     return NextResponse.next();
   }
 }
