@@ -106,8 +106,8 @@ taskboard-frontend/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Nugroho-00/taskboard-frontend.git
-cd taskboard-frontend
+git clone https://github.com/Nugroho-00/icn-frontend.git
+cd icn-frontend
 ```
 
 2. Install dependencies:
@@ -444,14 +444,14 @@ This project is licensed under the MIT License.
 
 ## 📞 Support
 
-For support, open an issue in the [GitHub repository](https://github.com/Nugroho-00/taskboard-frontend/issues).
+For support, open an issue in the [GitHub repository](https://github.com/Nugroho-00/icn-frontend/issues).
 
 ## 👤 Author
 
 **Satrio Nugroho**
 
 - GitHub: [@Nugroho-00](https://github.com/Nugroho-00)
-- Repository: [taskboard-frontend](https://github.com/Nugroho-00/taskboard-frontend)
+- Repository: [taskboard-frontend](https://github.com/Nugroho-00/icn-frontend)
 
 ---
 
